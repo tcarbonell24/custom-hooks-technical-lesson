@@ -20,6 +20,57 @@ To **fix** this, we will:
 
 * * * * *
 
+**Task 1: Setup the project and Manage Dependencies with npm**
+----------------------------------------------------
+**Project Setup: Installing Dependencies**
+------------------------------------------
+
+### **Step 1: Ensure You Have Node.js and npm Installed**
+
+Before starting, confirm you have **Node.js** and **npm** installed.\
+Run the following command to check:
+
+```bash
+node -v
+npm -v
+```
+### **Step 2: Create a React Project Using Vite**
+
+You can use this [repo](https://github.com/learn-co-curriculum/custom-hooks-technical-lesson) , create one using **Vite**:
+```bash
+# Create a new Vite project
+npm create vite@latest my-app --template react
+
+# Navigate into the project folder
+cd my-app
+
+# Install necessary dependencies
+npm install
+
+# Start the development server
+npm run dev
+```
+This will:\
+✅ Set up a **React development environment** using Vite.\
+✅ Install **default dependencies** (React, ReactDOM).\
+✅ Start a local server at `http://localhost:5173/`.
+
+### **Step 3: Install Additional Dependencies**
+
+To enhance debugging and manage package dependencies, install the following:
+```bash
+npm install react-router-dom chalk
+
+```
+
+### **Why use Chalk?**
+
+-   ✅ **Enhances debugging** -- Color-coded logs help identify success, errors, and warnings.
+-   ✅ **Improves readability** -- Makes console output **clearer** when fetching API data.
+### **react-router-dom**
+-   ✅ **`react-router-dom`** -- Enables page navigation.
+
+
 **Scenario: Why Use a Custom Hook?**
 ------------------------------------
 
@@ -115,17 +166,6 @@ function Users() {
 
 export default Users;
 ```
-**Task 1: Install and Manage Dependencies with npm**
-----------------------------------------------------
-
-Before we refactor, let's **install the Chalk package** for debugging:
-```bash
-npm install chalk
-```
-### **Why use Chalk?**
-
--   ✅ **Enhances debugging** -- Color-coded logs help identify success, errors, and warnings.
--   ✅ **Improves readability** -- Makes console output **clearer** when fetching API data.
 
 **Task 2: Create the Custom Hook (`useFetchData.js`)**
 ------------------------------------------------------
@@ -187,6 +227,8 @@ export default useFetchData;
 -   **Refetch function** -- Allows manual data fetching with a button click.
 -   **Uses Chalk** -- Adds **color-coded console logs** for easier debugging.
 
+
+
 **Task 3: Use the Custom Hook in Components**
 ---------------------------------------------
 
@@ -227,9 +269,50 @@ export default Posts;
 -   Includes a **"Refresh" button** to manually re-fetch posts.
 -   Chalk logs API requests and errors.
 
+#### **Step 3: Refactor `Users.jsx`**
+--------------------------------
+
+Now, let's replace the old `useEffect` logic in **`Users.jsx`** with our **Custom Hook (`useFetchData`)**.
+
+📁 **File: `src/components/Users.jsx`**
+
+```jsx
+import React from "react";
+import useFetchData from "../hooks/useFetchData";
+
+function Users() {
+  const { data, loading, error, refetch } = useFetchData(
+    "https://jsonplaceholder.typicode.com/users"
+  );
+
+  if (loading) return <p className="loading">Loading users...</p>;
+  if (error) return <p className="error">Error: {error}</p>;
+
+  return (
+    <div className="container">
+      <h2>Users</h2>
+      <button onClick={refetch}>Refresh Users</button>
+      <ul>
+        {data.map((user) => (
+          <li key={user.id}>{user.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default Users;
+```
+✅ **Refactored Features in `Users.jsx`:**
+
+-   Uses **`useFetchData`** to remove redundant `useEffect` logic.
+-   Includes a **"Refresh Users" button** to manually re-fetch users.
+-   Improved readability and maintainability.
+
+
 ### **Task 4: Manage Dependencies and Security**
 
-#### **Step 3: Viewing Installed Dependencies**
+#### **Step 4: Viewing Installed Dependencies**
 
 To list all installed packages:
 
@@ -262,7 +345,7 @@ npm audit fix --force
 **Task 5: Document, Refactor, and Maintain**
 --------------------------------------------
 
-### **Step 4: Using Git Best Practices**
+### **Step 5: Using Git Best Practices**
 
 To track changes efficiently, follow this Git workflow:
 
